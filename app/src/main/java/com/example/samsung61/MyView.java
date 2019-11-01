@@ -10,15 +10,12 @@ public class MyView extends View {
     public MyView(Context context) {
         super(context);
     }
+
     @Override
     protected void onDraw(Canvas canvas) {
         Paint paint = new Paint();
-        paint.setColor(Color.YELLOW);
+        paint.setColor(Color.RED);
         paint.setStyle(Paint.Style.FILL);
-        canvas.drawCircle(540, 860, 300, paint);
-        paint.setColor(Color.BLUE);
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(20);
-        canvas.drawCircle(540, 860, 300, paint);
+        canvas.drawRect(100, 100, 800, 860, paint);
     }
-    }
+}
