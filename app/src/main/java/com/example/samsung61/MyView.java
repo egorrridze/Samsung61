@@ -1,5 +1,6 @@
 package com.example.samsung61;
 
+import android.graphics.Color;
 import android.view.View;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,11 +13,12 @@ public class MyView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         Paint paint = new Paint();
-        int y = 0;
-        while (y < canvas.getHeight()) {
-            canvas.drawLine(0, y,
-                    this.getWidth(), y, paint);
-            y += 80;
-        }
+        paint.setColor(Color.YELLOW);
+        paint.setStyle(Paint.Style.FILL);
+        canvas.drawCircle(540, 860, 300, paint);
+        paint.setColor(Color.BLUE);
+        paint.setStyle(Paint.Style.STROKE);
+        paint.setStrokeWidth(20);
+        canvas.drawCircle(540, 860, 300, paint);
     }
-}
+    }
