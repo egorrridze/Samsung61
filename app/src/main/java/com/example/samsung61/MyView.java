@@ -5,6 +5,28 @@ import android.graphics.*;
 import android.view.View;
 
 public class MyView extends View {
+    float rand(float min , float max){
+        return (float)(Math.random() * (max - min + 1)) + min;
+    }
+
+    void fillRandom(float[] array , float min, float max){
+        for (int i = 0; i < array.length; i++){
+            array[i] = rand (min, max);
+        }
+    }
+
+    void fillRandomInt(int[] array , int min, int max){
+        for (int i = 0; i < array.length; i++){
+            array[i] = (int) rand (min, max);
+        }
+    }
+
+    void add(float[] array , float[] values){
+        for (int i = 0; i < array.length; i++){
+            array[i] += values[i];
+        }
+    }
+
     Paint paint = new Paint();
     int N = 20; // количество шариков
     int j=0;
@@ -14,22 +36,22 @@ public class MyView extends View {
     float[] vy = new float[N];
     int[] col = new int[3*N];
     boolean started;
+
     @Override
     protected void onDraw(Canvas canvas) {
         if (!started) {
             for (int i = 0; i < N; i++) {
-                x[i] = (float) (Math.random() * canvas.getWidth());
-                y[i] = (float) (Math.random() * canvas.getHeight());
-                vx[i] = (float) (Math.random() * 9);
-                vy[i] = (float) (Math.random() * 9);
+                fillRandom(x, 0, canvas.getWidth());
+                fillRandom(y, 0, canvas.getHeight());
+                fillRandom(vx, 0, 2);
+                fillRandom(vy, 0, 2);
 
             }
             for (int i = 0; i < N * 3; i++) {
-                col[i] = (int) (Math.random() * 255 - 0);
+                fillRandomInt(col, 0, 255);
             }
             started = true;
         }
-        paint.setColor(132);
         j = 0;
         for (int i = 0; i < N; i++) {
             paint.setARGB(col[j], col[j + 1], col[j + 2], 0);
@@ -44,16 +66,17 @@ public class MyView extends View {
             if (x[i] < 0 || x[i] > canvas.getWidth()) {
                 vx[i] = -vx[i];
                 x[i] += vx[i];
-            } else x[i] += vx[i];
+            }
             if (y[i] < 0 || y[i] > canvas.getHeight()) {
                 vy[i] = -vy[i];
                 y[i] += vy[i];
-            } else y[i] += vy[i];
+            }
+            add(x, vx);
+            add(y, vy);
         }
         invalidate();
     }
     public MyView(Context context) {
         super(context);
-
     }
 }
