@@ -37,6 +37,9 @@ public class MyView extends View {
     int[] col = new int[3*N];
     boolean started;
 
+    void drawBalls(Canvas canvas,  float x, float y){
+        canvas.drawCircle(x, y, 20, paint);
+    }
     @Override
     protected void onDraw(Canvas canvas) {
         if (!started) {
@@ -45,7 +48,6 @@ public class MyView extends View {
                 fillRandom(y, 0, canvas.getHeight());
                 fillRandom(vx, 0, 2);
                 fillRandom(vy, 0, 2);
-
             }
             for (int i = 0; i < N * 3; i++) {
                 fillRandomInt(col, 0, 255);
@@ -55,8 +57,8 @@ public class MyView extends View {
         j = 0;
         for (int i = 0; i < N; i++) {
             paint.setARGB(col[j], col[j + 1], col[j + 2], 0);
-            canvas.drawCircle(x[i], y[i], 20, paint);
-            j += 3;
+            drawBalls(canvas, x[i], y[i]);
+            j += 2;
         }
 
         // готовим массивы x и у для следущего кадра
