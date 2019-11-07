@@ -1,91 +1,59 @@
 package com.example.samsung61;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.os.CountDownTimer;
+import android.graphics.*;
 import android.view.View;
 
-
 public class MyView extends View {
-
-    int N = 15;
-    int[] l = new int [N];
-    double x0, y0;
-    double[] x = new double [N];
-    double[] y = new double [N];
-    double g = 9.832f, pi = Math.PI;
-    double[] w = new double[N];
-    double fi0;
-    double[] fi = new double[N];
-    int t = 0, deltaT = 1;
-
-    void makePendulum()
-    {
-        fi0 = pi/4;
-
-        int l_min = 100;
-        for (int i = 0; i<N; i++)
-        {
-            l[i] = l_min;
-            l_min += 50;
-
-            w[i] = Math.sqrt(g/l[i]);
-        }
-    }
-    void movePendulum()
-    {
-        t += deltaT;
-
-        for (int i = 0; i<N; i++)
-        {
-            fi[i] = fi0 * Math.cos(w[i] * t);
-            x[i] = l[i]*Math.sin(fi[i]);
-            y[i] = l[i]*Math.cos(fi[i]);
-        }
-    }
-
-    MyView(Context context) {
-        super(context);
-        makePendulum();
-        MyTimer timer = new MyTimer();
-        timer.start();
-    }
-
+    Paint paint = new Paint();
+    int N = 20; // количество шариков
+    int j=0;
+    float[] x  = new float[N];
+    float[] y  = new float[N];
+    float[] vx = new float[N];
+    float[] vy = new float[N];
+    int[] col = new int[3*N];
+    boolean started;
     @Override
     protected void onDraw(Canvas canvas) {
-        x0 = getWidth()/2;
-        y0 = getHeight()/4;
-        Paint paint = new Paint();
-        canvas.drawCircle((float) x0, (float) y0, 10, paint);
-        for (int i = 0; i<N; i++)
-        {
-            paint.setColor(Color.BLUE);
-            canvas.drawLine((float)x0, (float)y0, (float)(x[i] + x0), (float)(y[i]+ y0), paint);
-            paint.setColor(Color.RED);
-            canvas.drawCircle((float)(x[i] + x0), (float)(y[i] + y0), 20, paint);
-        }
-    }
+        if (!started) {
+            for (int i = 0; i < N; i++) {
+                x[i] = (float) (Math.random() * canvas.getWidth());
+                y[i] = (float) (Math.random() * canvas.getHeight());
+                vx[i] = (float) (Math.random() * 9);
+                vy[i] = (float) (Math.random() * 9);
 
-    void nextFrame()
-    {
-        movePendulum();
+            }
+            for (int i = 0; i < N * 3; i++) {
+                col[i] = (int) (Math.random() * 255 - 0);
+            }
+            started = true;
+        }
+        paint.setColor(132);
+        j = 0;
+        for (int i = 0; i < N; i++) {
+            paint.setARGB(col[j], col[j + 1], col[j + 2], 0);
+            canvas.drawCircle(x[i], y[i], 20, paint);
+            j += 3;
+        }
+
+        // готовим массивы x и у для следущего кадра
+
+        for (int i = 0; i < N; i++) {
+
+            if (x[i] < 0 || x[i] > canvas.getWidth()) {
+                vx[i] = -vx[i];
+                x[i] += vx[i];
+            } else x[i] += vx[i];
+            if (y[i] < 0 || y[i] > canvas.getHeight()) {
+                vy[i] = -vy[i];
+                y[i] += vy[i];
+            } else y[i] += vy[i];
+        }
         invalidate();
     }
+    public MyView(Context context) {
+        super(context);
 
-    class MyTimer extends CountDownTimer
-    {
-        MyTimer()
-        {
-            super(100000, 100);
-        }
-        @Override
-        public void onTick(long millisUntilFinished) {
-            nextFrame();
-        }
-        @Override
-        public void onFinish() {
-        }
     }
 }
